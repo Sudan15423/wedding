@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wedding Invitation | Sudan Krishna Shrestha &amp; Salina Amatya</title>
+
+    <!-- Google Fonts: Dancing Script (cursive), Playfair Display (logo), Lora (serif), Montserrat (sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* CSS Reset & Design Tokens */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-cream: #FAF8F5;
+            --bg-card: rgba(255, 253, 249, 0.95);
+            --bg-card-hover: rgba(255, 255, 255, 1);
+            --text-main: #2C2C2C;
+            --text-muted: #666666;
+            --burgundy: #6B1E2F;
+            --burgundy-dark: #4A121F;
+            --rose-soft: #F9ECEE;
+            --gold: #D4AF37;
+            --gold-light: #F3E5AB;
+            --gold-border: rgba(212, 175, 55, 0.35);
+            --shadow-lux: 0 10px 30px -10px rgba(107, 30, 47, 0.12);
+            --shadow-gold: 0 4px 15px rgba(212, 175, 55, 0.25);
+
+            /* Fonts */
+            --font-cursive: 'Dancing Script', cursive;
+            --font-logo: 'Playfair Display', Georgia, serif;
+            --font-serif: 'Lora', Georgia, serif;
+            --font-sans: 'Montserrat', system-ui, -apple-system, sans-serif;
+        }
+
+        /* Strict 100vh layout for all devices */
+        html,
+        body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            /* Prevent scrolling entirely */
+            background-color: var(--bg-cream);
+            background-image: radial-gradient(circle at center, #FFFDFB 0%, #EDE6DC 100%);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.4;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ----------------------------------------------------
+           1. FALLING PETALS CANVAS BACKGROUND
+        ---------------------------------------------------- */
+        #petalCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ----------------------------------------------------
+           2. STATIC COVER SCREEN (SLIDES UP AND FADES OUT)
+        ---------------------------------------------------- */
+        #coverScreen {
+            position: fixed;
+            inset: 0;
+            background-color: var(--bg-cream);
+            background-image: radial-gradient(circle at center, #FFFDFB 0%, #EDE6DC 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 5vmin;
+            transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1),
+                opacity 1.2s ease,
+                visibility 1.2s ease;
+        }
+
+        #coverScreen.opened {
+            transform: translateY(-100%);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .cover-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-height: 100%;
+        }
+
+        .cover-monogram {
+            width: clamp(80px, 15vmin, 120px);
+            height: clamp(80px, 15vmin, 120px);
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFFDFB 0%, var(--rose-soft) 100%);
+            border: 2px solid var(--gold);
+            box-shadow: var(--shadow-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 3vh;
+        }
+
+        .cover-monogram span {
+            font-family: var(--font-logo);
+            font-size: clamp(2.5rem, 7vmin, 4rem);
+            font-weight: 700;
+            color: var(--burgundy);
+            font-style: italic;
+            line-height: 1;
+        }
+
+        .cover-title {
+            font-family: var(--font-cursive);
+            font-size: clamp(3rem, 10vmin, 5.5rem);
+            color: var(--burgundy-dark);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 2vh;
+        }
+
+        .cover-subtitle {
+            font-family: var(--font-serif);
+            font-size: clamp(0.9rem, 2.5vmin, 1.2rem);
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 4vh;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-open {
+            padding: clamp(12px, 2.5vh, 18px) clamp(25px, 5vw, 40px);
+            border-radius: 50px;
+            font-family: var(--font-sans);
+            font-size: clamp(0.85rem, 2vmin, 1rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #FFFFFF;
+            background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-dark) 50%, var(--gold) 100%);
+            background-size: 200% auto;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(107, 30, 47, 0.3);
+            transition: all 0.35s ease;
+            animation: shine 4s infinite linear;
+        }
+
+        .btn-open:hover,
+        .btn-open:active {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 25px rgba(107, 30, 47, 0.4);
+        }
+
+        /* ----------------------------------------------------
+           3. MAIN CAROUSEL LAYOUT (100VH FIXED)
+        ---------------------------------------------------- */
+        .app-wrapper {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s ease 0.3s, transform 1s cubic-bezier(0.25, 1, 0.5, 1) 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2vh 4vw;
+            /* Dynamic padding based on screen height/width */
+        }
+
+        .app-wrapper.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 100%;
+            max-height: 90vh;
+            /* Leaves safe area on very tall screens */
+        }
+
+        .card {
+            position: absolute;
+            /* Stacking them entirely */
+            inset: 0;
+            background: var(--bg-card);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: clamp(15px, 3vh, 28px);
+            padding: clamp(15px, 3vh, 40px) clamp(15px, 4vw, 40px);
+            border: 1px solid var(--gold-border);
+            box-shadow: var(--shadow-lux);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            /* Key for pushing buttons to bottom */
+
+            /* Carousel Animation States */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(40px);
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s;
+        }
+
+        .card.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        .card.prev {
+            transform: translateX(-40px);
+            visibility: hidden;
+        }
+
+        .card-inner-frame {
+            position: absolute;
+            inset: clamp(5px, 1vh, 12px);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: clamp(10px, 2vh, 20px);
+            pointer-events: none;
+        }
+
+        /* Content Wrapper to handle dynamic fitting */
+        .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            overflow: hidden;
+            /* Prevent internal scroll */
+            padding-bottom: 1vh;
+        }
+
+        /* Responsive Media Frames */
+        .story-img-frame {
+            width: 100%;
+            max-height: 35vh;
+            /* Dynamic max height */
+            border-radius: clamp(10px, 2vh, 18px);
+            overflow: hidden;
+            margin: 2vh 0;
+            border: 1px solid var(--gold-border);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            display: flex;
+            justify-content: center;
+        }
+
+        .story-img-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Fills the frame beautifully without breaking aspect ratio */
+            display: block;
+        }
+
+        /* Monogram Logo */
+        .monogram-badge {
+            display: flex;
+            width: max-content;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(4px, 1vh, 10px) clamp(15px, 4vw, 35px);
+            margin: 0 auto 1.5vh auto;
+            border-radius: 500px;
+            background: linear-gradient(135deg, #FFFDFB 0%, var(--rose-soft) 100%);
+            border: 2px solid var(--gold);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .monogram-badge span {
+            font-family: var(--font-logo);
+            font-size: clamp(2rem, 6vmin, 4rem);
+            font-weight: 700;
+            color: var(--burgundy);
+            line-height: 1.1;
+            white-space: nowrap;
+            font-style: italic;
+        }
+
+        /* Typography - Dynamic sizes using vmin to scale for ALL screens */
+        .sub-tag {
+            font-family: var(--font-sans);
+            font-size: clamp(0.6rem, 1.8vmin, 0.8rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--burgundy);
+            display: block;
+            margin-bottom: 1vh;
+        }
+
+        .hero-title {
+            font-family: var(--font-cursive);
+            font-size: clamp(2.2rem, 7vmin, 4.5rem);
+            line-height: 1.1;
+            color: var(--burgundy-dark);
+            font-weight: 700;
+            margin: 1vh 0;
+        }
+
+        .ampersand {
+            display: block;
+            font-family: var(--font-cursive);
+            font-size: clamp(1.8rem, 5vmin, 3.5rem);
+            color: var(--gold);
+            margin: 0.5vh 0;
+            line-height: 1;
+        }
+
+        /* Countdown Grid */
+        .timer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: clamp(5px, 1.5vw, 15px);
+            margin-top: 1.5vh;
+            width: 100%;
+        }
+
+        .timer-unit {
+            background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF9 100%);
+            border: 1px solid var(--gold-border);
+            border-radius: clamp(8px, 1.5vh, 16px);
+            padding: clamp(5px, 1.5vh, 15px) 2px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .timer-number {
+            font-family: var(--font-serif);
+            font-size: clamp(1.2rem, 3.5vmin, 2rem);
+            font-weight: 700;
+            color: var(--burgundy);
+            line-height: 1;
+        }
+
+        .timer-label {
+            font-size: clamp(0.5rem, 1.2vmin, 0.7rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-top: 0.5vh;
+        }
+
+        /* Gold Line Divider */
+        .gold-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2vw;
+            margin: 2vh auto;
+            width: 80%;
+        }
+
+        .gold-line {
+            height: 1px;
+            flex-grow: 1;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        /* Event Schedule Timeline */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(5px, 1.5vh, 15px);
+            margin-top: 1.5vh;
+            text-align: left;
+            width: 100%;
+        }
+
+        .event-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--gold-border);
+            border-radius: clamp(10px, 2vh, 18px);
+            padding: clamp(8px, 2vh, 20px);
+            display: flex;
+            align-items: center;
+            gap: 3vw;
+        }
+
+        .event-time-badge {
+            background: linear-gradient(135deg, var(--burgundy), var(--burgundy-dark));
+            color: #FFF;
+            padding: clamp(5px, 1.5vh, 12px) clamp(8px, 2vw, 15px);
+            border-radius: clamp(8px, 1.5vh, 14px);
+            text-align: center;
+            min-width: 20vw;
+            font-weight: 700;
+            font-size: clamp(0.6rem, 1.8vmin, 0.9rem);
+            box-shadow: 0 4px 10px rgba(107, 30, 47, 0.25);
+            white-space: nowrap;
+        }
+
+        .event-details h3 {
+            font-family: var(--font-cursive);
+            font-size: clamp(1.1rem, 3vmin, 1.8rem);
+            color: var(--text-main);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 0.5vh;
+        }
+
+        .event-details p {
+            font-size: clamp(0.65rem, 1.8vmin, 0.9rem);
+            color: var(--text-muted);
+        }
+
+        /* Family Cards */
+        .family-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: clamp(8px, 2vh, 20px);
+            margin-top: 2vh;
+            width: 100%;
+        }
+
+        @media (min-width: 520px) {
+            .family-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .family-card {
+            background: linear-gradient(145deg, #FFFFFF, #FFFDF9);
+            border: 1px solid var(--gold-border);
+            border-radius: clamp(10px, 2vh, 18px);
+            padding: clamp(10px, 2.5vh, 30px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            text-align: center;
+        }
+
+        .family-card h3 {
+            font-family: var(--font-cursive);
+            font-size: clamp(1.5rem, 4vmin, 2.5rem);
+            color: var(--burgundy);
+            margin-bottom: 0.5vh;
+            line-height: 1.1;
+            font-weight: 700;
+        }
+
+        .family-card p {
+            font-size: clamp(0.7rem, 2vmin, 0.95rem);
+            color: var(--text-muted);
+        }
+
+        /* Action Buttons & Navigation */
+        .btn-action {
+            width: 100%;
+            padding: clamp(10px, 2.5vh, 18px) clamp(15px, 3vw, 30px);
+            border-radius: 50px;
+            font-family: var(--font-sans);
+            font-size: clamp(0.75rem, 2vmin, 0.95rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: all 0.35s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn-burgundy-gold {
+            background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-dark) 50%, var(--gold) 100%);
+            background-size: 200% auto;
+            color: #FFFFFF;
+            box-shadow: 0 8px 15px rgba(107, 30, 47, 0.3);
+            animation: shine 4s infinite linear;
+        }
+
+        @keyframes shine {
+            0% {
+                background-position: 0% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1.5px solid var(--gold);
+        }
+
+        /* Slide Navigation (Pinned to bottom due to flex) */
+        .slide-nav {
+            margin-top: auto;
+            display: flex;
+            gap: 2vw;
+            width: 100%;
+            padding-top: 1.5vh;
+        }
+
+        .slide-nav .btn-action {
+            flex: 1;
+        }
+
+        /* Floating Audio Toggle */
+        .audio-toggle {
+            position: fixed;
+            bottom: 2vh;
+            right: 2vw;
+            width: clamp(40px, 6vmin, 52px);
+            height: clamp(40px, 6vmin, 52px);
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 1.5px solid var(--gold);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--burgundy);
+        }
+
+        .audio-toggle svg {
+            width: clamp(16px, 2.5vmin, 22px);
+            height: clamp(16px, 2.5vmin, 22px);
+        }
+
+        /* Thank You Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(34, 28, 29, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5vw;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.45s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--bg-cream);
+            border-radius: 30px;
+            padding: clamp(20px, 5vh, 44px) clamp(15px, 5vw, 26px);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            border: 1.5px solid var(--gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: scale(0.88) translateY(20px);
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .rose-burst {
+            font-size: clamp(2rem, 6vmin, 3.5rem);
+            margin-bottom: 1.5vh;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. STATIC COVER SCREEN -->
+    <div id="coverScreen">
+        <div class="cover-content">
+            <div class="cover-monogram">
+                <span>S&amp;S</span>
+            </div>
+            <h1 class="cover-title">Sudan &amp; Salina</h1>
+            <p class="cover-subtitle">"Two Hearts. One Lifetime Celebration."</p>
+            <button class="btn-open" onclick="openInvitation()">Open Invitation</button>
+        </div>
+    </div>
+
+    <!-- 2. FALLING PETALS CANVAS BACKGROUND -->
+    <canvas id="petalCanvas"></canvas>
+
+    <!-- 3. ROYALTY-FREE MUSIC TOGGLE -->
+    <audio id="bgMusic" loop preload="auto">
+        <source
+            src="https://upload.wikimedia.org/wikipedia/commons/2/21/Chopin_-_Nocturne_in_E_flat_major_Op._9_No._2.ogg"
+            type="audio/ogg">
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+    </audio>
+
+    <button class="audio-toggle" id="audioBtn" title="Toggle Background Music">
+        <svg id="musicIconPlay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            style="display:none;">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <svg id="musicIconPause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18V5l12-2v13" />
+            <circle cx="6" cy="18" r="3" />
+            <circle cx="18" cy="16" r="3" />
+        </svg>
+    </button>
+
+    <!-- 4. MAIN INVITATION CONTENT (CAROUSEL) -->
+    <div class="app-wrapper" id="appWrapper">
+
+        <div class="carousel-container">
+
+            <!-- SLIDE 1: HERO -->
+            <section class="card active" id="slide-0">
+                <div class="card-inner-frame"></div>
+
+                <div class="card-body">
+                    <div class="monogram-badge">
+                        <span>S&amp;S</span>
+                    </div>
+                    <span class="sub-tag">Together With Their Families</span>
+                    <h1 class="hero-title">
+                        Sudan Krishna Shrestha
+                        <span class="ampersand">&amp;</span>
+                        Salina Amatya
+                    </h1>
+                    <p
+                        style="font-family: var(--font-serif); font-style: italic; color: var(--text-muted); font-size: clamp(0.8rem, 2.2vmin, 1.1rem); margin-top: 1vh;">
+                        "Two Hearts. One Lifetime Celebration."
+                    </p>
+
+                    <div class="story-img-frame">
+                        <img src="couple-photo.jpg" alt="Salina and Sudan"
+                            onerror="this.src='https://placehold.co/800x400/F9ECEE/6B1E2F?text=Sudan+%26+Salina'">
+                    </div>
+
+                    <div class="gold-divider">
+                        <div class="gold-line"></div>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2">
+                            <path
+                                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                        <div class="gold-line"></div>
+                    </div>
+
+                    <div class="timer-grid" id="countdown">
+                        <div class="timer-unit">
+                            <div class="timer-number" id="days">00</div>
+                            <div class="timer-label">Days</div>
+                        </div>
+                        <div class="timer-unit">
+                            <div class="timer-number" id="hours">00</div>
+                            <div class="timer-label">Hours</div>
+                        </div>
+                        <div class="timer-unit">
+                            <div class="timer-number" id="minutes">00</div>
+                            <div class="timer-label">Mins</div>
+                        </div>
+                        <div class="timer-unit">
+                            <div class="timer-number" id="seconds">00</div>
+                            <div class="timer-label">Secs</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-nav">
+                    <button class="btn-action btn-burgundy-gold" onclick="moveSlide(1)">Continue ➔</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: OUR STORY -->
+            <section class="card" id="slide-1">
+                <div class="card-inner-frame"></div>
+
+                <div class="card-body">
+                    <span class="sub-tag">A Joyful Journey</span>
+                    <h2
+                        style="font-family: var(--font-cursive); font-size: clamp(2rem, 5vmin, 2.8rem); font-weight: 700; color: var(--text-main); margin-bottom: 1vh;">
+                        Our Story</h2>
+
+                    <div class="story-img-frame">
+                        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80"
+                            alt="Romantic Celebration"
+                            onerror="this.src='https://placehold.co/800x400/FAF8F5/6B1E2F?text=Our+Story'">
+                    </div>
+
+                    <p style="color: var(--text-muted); font-size: clamp(0.75rem, 2vmin, 1rem); line-height: 1.6;">
+                        From our very first meeting to years of shared laughter, growth, and endless conversations—our
+                        journey together has brought us to this wondrous moment. We are overjoyed to step into this new
+                        chapter of love surrounded by our families and dearest friends.
+                    </p>
+                </div>
+
+                <div class="slide-nav">
+                    <button class="btn-action btn-outline" onclick="moveSlide(-1)">⬅ Back</button>
+                    <button class="btn-action btn-burgundy-gold" onclick="moveSlide(1)">Next ➔</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: FAMILY HONORS -->
+            <section class="card" id="slide-2">
+                <div class="card-inner-frame"></div>
+
+                <div class="card-body">
+                    <span class="sub-tag">With Blessings &amp; Honor</span>
+                    <h2
+                        style="font-family: var(--font-cursive); font-size: clamp(2rem, 5vmin, 2.8rem); font-weight: 700; color: var(--text-main); margin-bottom: 1vh;">
+                        Family Honors</h2>
+
+                    <div class="family-grid">
+                        <div class="family-card">
+                            <span class="sub-tag" style="font-size: clamp(0.5rem, 1.2vmin, 0.65rem);">Groom's
+                                Family</span>
+                            <h3>Shrestha Family</h3>
+                            <p>Son of Mr. &amp; Mrs. Shrestha</p>
+                        </div>
+                        <div class="family-card">
+                            <span class="sub-tag" style="font-size: clamp(0.5rem, 1.2vmin, 0.65rem);">Bride's
+                                Family</span>
+                            <h3>Amatya Family</h3>
+                            <p>Daughter of Mr. &amp; Mrs. Amatya</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slide-nav">
+                    <button class="btn-action btn-outline" onclick="moveSlide(-1)">⬅ Back</button>
+                    <button class="btn-action btn-burgundy-gold" onclick="moveSlide(1)">Next ➔</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: SCHEDULE & VENUE -->
+            <section class="card" id="slide-3">
+                <div class="card-inner-frame"></div>
+
+                <div class="card-body">
+                    <span class="sub-tag">Program Details</span>
+                    <h2
+                        style="font-family: var(--font-cursive); font-size: clamp(2rem, 5vmin, 2.8rem); font-weight: 700; color: var(--text-main); margin-bottom: 1vh;">
+                        When &amp; Where</h2>
+
+                    <div class="timeline">
+                        <div class="event-card">
+                            <div class="event-time-badge">11:00 AM</div>
+                            <div class="event-details">
+                                <h3>Auspicious Wedding Ceremony</h3>
+                                <p>Traditional ritual blessings &amp; exchange of vows</p>
+                            </div>
+                        </div>
+
+                        <div class="event-card">
+                            <div class="event-time-badge">01:30 PM</div>
+                            <div class="event-details">
+                                <h3>Grand Festive Banquet</h3>
+                                <p>Delectable dinner, live music &amp; joyful toasts</p>
+                            </div>
+                        </div>
+
+                        <div class="event-card">
+                            <div class="event-time-badge">03:30 PM</div>
+                            <div class="event-details">
+                                <h3>Reception &amp; Dancing</h3>
+                                <p>High-energy celebration &amp; photo moments</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2vh; text-align: center;">
+                        <p
+                            style="font-family: var(--font-serif); font-weight: 700; color: var(--text-main); font-size: clamp(1rem, 2.5vmin, 1.25rem);">
+                            The Royal Palace Ballroom</p>
+                        <p
+                            style="color: var(--text-muted); font-size: clamp(0.7rem, 1.8vmin, 0.9rem); margin-bottom: 1.5vh;">
+                            Durbar Marg, Kathmandu, Nepal</p>
+
+                        <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer"
+                            class="btn-action btn-outline"
+                            style="width: auto; padding-left: 20px; padding-right: 20px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon points="1 6 1 22 8 18 15 22 22 18 22 2 15 6 8 2 1 6" />
+                                <line x1="8" y1="2" x2="8" y2="18" />
+                                <line x1="15" y1="6" x2="15" y2="22" />
+                            </svg>
+                            Open Google Maps
+                        </a>
+                    </div>
+                </div>
+
+                <div class="slide-nav">
+                    <button class="btn-action btn-outline" onclick="moveSlide(-1)">⬅ Back</button>
+                    <button class="btn-action btn-burgundy-gold" onclick="moveSlide(1)">Next ➔</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: RSVP -->
+            <section class="card" id="slide-4">
+                <div class="card-inner-frame"></div>
+
+                <div class="card-body">
+                    <span class="sub-tag">Kindly Respond</span>
+                    <h2
+                        style="font-family: var(--font-cursive); font-size: clamp(2rem, 5vmin, 2.8rem); font-weight: 700; color: var(--text-main); margin-bottom: 1vh;">
+                        Join Our Day</h2>
+                    <p style="color: var(--text-muted); font-size: clamp(0.8rem, 2.2vmin, 1rem); margin-bottom: 3vh;">
+                        Your presence and love will complete our grand celebration!
+                    </p>
+
+                    <button class="btn-action btn-burgundy-gold" onclick="triggerAttendance()"
+                        style="max-width: 300px;">
+                        ✨ Will Attend ✨
+                    </button>
+                </div>
+
+                <div class="slide-nav">
+                    <button class="btn-action btn-outline" onclick="moveSlide(-1)">⬅ Back</button>
+                </div>
+            </section>
+
+        </div> <!-- End Carousel Container -->
+
+    </div>
+
+    <!-- 5. THANK YOU / RSVP CONFIRMATION MODAL -->
+    <div class="modal-overlay" id="thankYouModal">
+        <div class="modal-card">
+            <div class="rose-burst">🌹</div>
+            <span class="sub-tag">Confirmation Received</span>
+            <h2
+                style="font-family: var(--font-cursive); font-size: clamp(2rem, 6vmin, 3rem); font-weight: 700; color: var(--text-main); margin: 1vh 0;">
+                Thank You!</h2>
+            <p
+                style="font-family: var(--font-serif); font-size: clamp(1rem, 2.5vmin, 1.25rem); color: var(--text-muted); line-height: 1.5; margin-bottom: 3vh;">
+                Thank you for confirming! We can't wait to see you at the wedding! 🎉
+            </p>
+
+            <button class="btn-action btn-outline" onclick="closeModal()">
+                Back To Invitation
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Intro Slide & Audio Sequence ---
+        const bgMusic = document.getElementById('bgMusic');
+        let isMusicPlaying = false;
+        let isOpening = false;
+
+        function openInvitation() {
+            if (isOpening) return;
+            isOpening = true;
+
+            const cover = document.getElementById('coverScreen');
+            const wrapper = document.getElementById('appWrapper');
+
+            // Start music immediately on user gesture
+            playAudio();
+
+            // Trigger the slide up and fade in
+            cover.classList.add('opened');
+            wrapper.classList.add('visible');
+
+            // Prevent background scrolling while the cover slides up
+            document.body.style.overflow = 'hidden';
+
+            // Completely remove the cover from the DOM after it fades out to prevent any "stuck" interactions
+            setTimeout(() => {
+                cover.style.display = 'none';
+            }, 1200); // Wait for the 1.2s transition
+        }
+
+        function playAudio() {
+            bgMusic.play().then(() => {
+                isMusicPlaying = true;
+                updateAudioIcon();
+            }).catch(() => {
+                isMusicPlaying = false;
+                updateAudioIcon();
+            });
+        }
+
+        function toggleAudio() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                isMusicPlaying = false;
+            } else {
+                playAudio();
+            }
+            updateAudioIcon();
+        }
+
+        function updateAudioIcon() {
+            const playIcon = document.getElementById('musicIconPlay');
+            const pauseIcon = document.getElementById('musicIconPause');
+            if (isMusicPlaying) {
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            } else {
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            }
+        }
+
+        document.getElementById('audioBtn').addEventListener('click', toggleAudio);
+
+        // --- 2. Live Working Countdown Timer ---
+        const targetDate = new Date('November 28, 2026 11:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = "<div style='grid-column: span 4; color:var(--burgundy); font-family:var(--font-serif); font-size:1.2rem; font-weight:700;'>The Wedding Day Is Here! 🎉</div>";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = String(days).padStart(2, '0');
+            document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // --- 3. Carousel Navigation Logic ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.card');
+        const totalSlides = slides.length;
+
+        function moveSlide(direction) {
+            // Remove active and prev classes from current slide
+            slides[currentSlide].classList.remove('active');
+
+            // If moving forward, mark current as prev so it slides left
+            if (direction > 0) {
+                slides[currentSlide].classList.add('prev');
+            } else {
+                // If moving backward, remove prev from all to reset animation
+                slides.forEach(slide => slide.classList.remove('prev'));
+            }
+
+            // Calculate new slide index
+            currentSlide += direction;
+
+            // Bound the index
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            if (currentSlide < 0) currentSlide = 0;
+
+            // Add active class to new slide
+            slides[currentSlide].classList.add('active');
+        }
+
+        // --- 4. Falling Rose Petals Canvas (Medium Speed & Balanced Density) ---
+        const canvas = document.getElementById('petalCanvas');
+        const ctx = canvas.getContext('2d');
+        let petals = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Petal {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -20;
+                this.size = Math.random() * 6 + 5;
+                this.speedY = Math.random() * 1.4 + 0.9;
+                this.speedX = Math.random() * 0.8 - 0.4;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 1.6 - 0.8;
+                this.color = ['#6B1E2F', '#832C37', '#E8C5C8', '#D4AF37'][Math.floor(Math.random() * 4)];
+                this.opacity = Math.random() * 0.5 + 0.4;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX + Math.sin(this.y * 0.015) * 0.5;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > canvas.height + 25) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // Initialize 22 petals for medium density
+        for (let i = 0; i < 22; i++) {
+            petals.push(new Petal());
+        }
+
+        function animatePetals() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            petals.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animatePetals);
+        }
+        animatePetals();
+
+        // --- 5. RSVP Modal Controls ---
+        function triggerAttendance() {
+            const modal = document.getElementById('thankYouModal');
+            modal.classList.add('active');
+
+            // Add celebratory petal burst
+            for (let i = 0; i < 10; i++) {
+                petals.push(new Petal());
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('thankYouModal').classList.remove('active');
+        }
+    </script>
+</body>
+
+</html>
