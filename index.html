@@ -25,17 +25,18 @@
 
         :root {
             --bg-cream: #FAF8F5;
-            --bg-card: rgba(255, 253, 249, 0.95);
-            --bg-card-hover: rgba(255, 255, 255, 1);
+            /* 1% opacity so the background shines through */
+            --bg-card: rgba(255, 253, 249, 0.01);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
             --text-main: #2C2C2C;
-            --text-muted: #666666;
+            --text-muted: #4A4A4A;
             --burgundy: #6B1E2F;
             --burgundy-dark: #4A121F;
             --rose-soft: #F9ECEE;
             --gold: #D4AF37;
             --gold-light: #F3E5AB;
-            --gold-border: rgba(212, 175, 55, 0.35);
-            --shadow-lux: 0 10px 30px -10px rgba(107, 30, 47, 0.12);
+            --gold-border: rgba(212, 175, 55, 0.6);
+            --shadow-lux: 0 10px 30px -10px rgba(107, 30, 47, 0.1);
             --shadow-gold: 0 4px 15px rgba(212, 175, 55, 0.25);
 
             /* Fonts */
@@ -52,7 +53,6 @@
             width: 100vw;
             overflow: hidden;
             background-color: var(--bg-cream);
-            background-image: radial-gradient(circle at center, #FFFDFB 0%, #EDE6DC 100%);
             color: var(--text-main);
             font-family: var(--font-sans);
             line-height: 1.4;
@@ -61,6 +61,32 @@
         body {
             display: flex;
             flex-direction: column;
+            position: relative;
+        }
+
+        /* ----------------------------------------------------
+           0. FIXED FLORAL BORDER BACKGROUND
+        ---------------------------------------------------- */
+        .bg-frame {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url('border.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.95;
+        }
+
+        /* The Gold Inner Frame */
+        .gold-frame-border {
+            position: fixed;
+            inset: 3vmin;
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            z-index: 5;
+            pointer-events: none;
+            box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.3), 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
         /* ----------------------------------------------------
@@ -73,11 +99,11 @@
             width: 100vw;
             height: 100vh;
             pointer-events: none;
-            z-index: 0;
+            z-index: 1;
         }
 
         /* ----------------------------------------------------
-           2. STATIC COVER SCREEN (SLIDES UP AND FADES OUT)
+           2. STATIC COVER SCREEN
         ---------------------------------------------------- */
         #coverScreen {
             position: fixed;
@@ -151,21 +177,21 @@
         }
 
         .btn-open {
-            padding: clamp(12px, 2.5vh, 18px) clamp(25px, 5vw, 40px);
+            padding: clamp(10px, 2vh, 16px) clamp(20px, 4vw, 36px);
             border-radius: 50px;
             font-family: var(--font-sans);
-            font-size: clamp(0.85rem, 2vmin, 1rem);
+            font-size: clamp(0.8rem, 1.8vmin, 1rem);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.15em;
             color: #FFFFFF;
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-dark) 50%, var(--gold) 100%);
+            background: linear-gradient(135deg, #4A121F 0%, #6B1E2F 30%, #9C5B6A 65%, #D4AF37 100%);
             background-size: 200% auto;
             border: none;
             cursor: pointer;
             box-shadow: 0 10px 20px rgba(107, 30, 47, 0.3);
             transition: all 0.35s ease;
-            animation: shine 4s infinite linear;
+            animation: shine 4s infinite alternate ease-in-out;
         }
 
         .btn-open:hover,
@@ -181,14 +207,14 @@
             width: 100%;
             height: 100vh;
             position: relative;
-            z-index: 1;
+            z-index: 10;
             opacity: 0;
             transform: translateY(50px);
             transition: opacity 1s ease 0.3s, transform 1s cubic-bezier(0.25, 1, 0.5, 1) 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2vh 4vw;
+            padding: 4vh 6vw;
         }
 
         .app-wrapper.visible {
@@ -199,21 +225,22 @@
         .carousel-container {
             position: relative;
             width: 100%;
-            max-width: 800px;
+            max-width: 650px;
             height: 100%;
-            max-height: 90vh;
+            max-height: 82vh;
         }
 
         .card {
             position: absolute;
             inset: 0;
             background: var(--bg-card);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
+            /* Reduced blur so the background image remains crisp */
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
             border-radius: clamp(15px, 3vh, 28px);
             padding: clamp(15px, 3vh, 40px) clamp(15px, 4vw, 40px);
             border: 1px solid var(--gold-border);
-            box-shadow: var(--shadow-lux);
+            box-shadow: none;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -240,7 +267,7 @@
         .card-inner-frame {
             position: absolute;
             inset: clamp(5px, 1vh, 12px);
-            border: 1px solid rgba(212, 175, 55, 0.25);
+            border: 1px solid rgba(212, 175, 55, 0.5);
             border-radius: clamp(10px, 2vh, 20px);
             pointer-events: none;
         }
@@ -254,13 +281,117 @@
             align-items: center;
             width: 100%;
             overflow: hidden;
-            padding-bottom: 1vh;
+            padding-bottom: 0;
+        }
+
+        /* ----------------------------------------------------
+           SPECIFIC OVERRIDES FOR THE "WHEN & WHERE" CARD
+        ---------------------------------------------------- */
+        #slide-3 .card-body {
+            justify-content: flex-start;
+            padding-top: 0.5vh;
+            height: 100%;
+        }
+
+        #slide-3 h2 {
+            font-size: clamp(1.5rem, 4.2vmin, 2rem) !important;
+            margin-bottom: 0.5vh !important;
+        }
+
+        #slide-3 .timeline {
+            gap: 1vh;
+            margin-top: 1vh;
+        }
+
+        #slide-3 .event-card {
+            padding: 1.2vh 2vw;
+            gap: clamp(10px, 2vw, 20px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        #slide-3 .event-time-badge {
+            padding: 0.8vh 1vw;
+            font-size: clamp(0.55rem, 1.4vmin, 0.75rem);
+            width: auto;
+            min-width: 105px;
+            max-width: 130px;
+            flex: 0 0 auto;
+        }
+
+        #slide-3 .event-details {
+            flex: 1;
+            text-align: left;
+        }
+
+        #slide-3 .event-details h3 {
+            font-size: clamp(0.95rem, 2.3vmin, 1.3rem);
+        }
+
+        #slide-3 .event-details p {
+            font-size: clamp(0.6rem, 1.4vmin, 0.75rem);
+            color: var(--text-main);
+        }
+
+        #slide-3 .location-block {
+            margin-top: 1vh;
+            text-align: center;
+            width: 100%;
+        }
+
+        #slide-3 .location-title {
+            font-family: var(--font-serif);
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: clamp(0.85rem, 2vmin, 1.1rem);
+            margin-bottom: 0.2vh;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        #slide-3 .location-address {
+            color: var(--text-main);
+            font-size: clamp(0.6rem, 1.5vmin, 0.75rem);
+            margin-bottom: 0.5vh;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        #slide-3 .map-btn {
+            width: auto;
+            padding: clamp(4px, 1vh, 8px) clamp(10px, 2vw, 16px);
+            font-size: clamp(0.6rem, 1.4vmin, 0.75rem);
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            margin-bottom: 1.5vh;
+        }
+
+        /* NEW MAP EMBED STYLES */
+        .map-container {
+            width: 100%;
+            flex: 1;
+            /* Fills remaining space */
+            min-height: 150px;
+            border-radius: clamp(10px, 2vh, 18px);
+            overflow: hidden;
+            border: 1px solid var(--gold-border);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            /* Warm filter to match the theme */
+            filter: sepia(0.3) contrast(0.9) brightness(1.05);
+        }
+
+        .map-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
         }
 
         /* Responsive Media Frames */
         .story-img-frame {
             width: 100%;
-            max-height: 35vh;
+            max-height: 32vh;
             border-radius: clamp(10px, 2vh, 18px);
             overflow: hidden;
             margin: 2vh 0;
@@ -286,7 +417,9 @@
             padding: clamp(4px, 1vh, 10px) clamp(15px, 4vw, 35px);
             margin: 0 auto 1.5vh auto;
             border-radius: 500px;
-            background: linear-gradient(135deg, #FFFDFB 0%, var(--rose-soft) 100%);
+            background: rgba(255, 253, 249, 0.85);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             border: 2px solid var(--gold);
             box-shadow: var(--shadow-gold);
         }
@@ -301,7 +434,7 @@
             font-style: italic;
         }
 
-        /* Typography - Dynamic sizes using vmin to scale for ALL screens */
+        /* Typography */
         .sub-tag {
             font-family: var(--font-sans);
             font-size: clamp(0.6rem, 1.8vmin, 0.8rem);
@@ -311,6 +444,7 @@
             color: var(--burgundy);
             display: block;
             margin-bottom: 1vh;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.9);
         }
 
         .hero-title {
@@ -320,6 +454,7 @@
             color: var(--burgundy-dark);
             font-weight: 700;
             margin: 1vh 0;
+            text-shadow: 1px 1px 4px rgba(255, 255, 255, 0.8);
         }
 
         .ampersand {
@@ -341,7 +476,9 @@
         }
 
         .timer-unit {
-            background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF9 100%);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             border: 1px solid var(--gold-border);
             border-radius: clamp(8px, 1.5vh, 16px);
             padding: clamp(5px, 1.5vh, 15px) 2px;
@@ -354,6 +491,23 @@
             font-weight: 700;
             color: var(--burgundy);
             line-height: 1;
+            display: inline-block;
+        }
+
+        @keyframes tick-anim {
+            0% {
+                opacity: 0.2;
+                transform: translateY(-8px) scale(0.95);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .timer-number.tick {
+            animation: tick-anim 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
         .timer-label {
@@ -361,7 +515,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: var(--text-muted);
+            color: var(--text-main);
             margin-top: 0.5vh;
         }
 
@@ -392,7 +546,8 @@
         }
 
         .event-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
             border: 1px solid var(--gold-border);
             border-radius: clamp(10px, 2vh, 18px);
             padding: clamp(8px, 2vh, 20px);
@@ -425,7 +580,7 @@
 
         .event-details p {
             font-size: clamp(0.65rem, 1.8vmin, 0.9rem);
-            color: var(--text-muted);
+            color: var(--text-main);
         }
 
         /* Family Cards */
@@ -444,7 +599,8 @@
         }
 
         .family-card {
-            background: linear-gradient(145deg, #FFFFFF, #FFFDF9);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
             border: 1px solid var(--gold-border);
             border-radius: clamp(10px, 2vh, 18px);
             padding: clamp(10px, 2.5vh, 30px);
@@ -463,35 +619,64 @@
 
         .family-card p {
             font-size: clamp(0.7rem, 2vmin, 0.95rem);
-            color: var(--text-muted);
+            color: var(--text-main);
         }
 
-        /* Action Buttons & Navigation */
+        /* ----------------------------------------------------
+           BUTTON ENHANCEMENTS
+        ---------------------------------------------------- */
         .btn-action {
             width: 100%;
-            padding: clamp(10px, 2.5vh, 18px) clamp(15px, 3vw, 30px);
+            padding: clamp(8px, 1.5vh, 14px) clamp(15px, 3vw, 30px);
             border-radius: 50px;
             font-family: var(--font-sans);
-            font-size: clamp(0.75rem, 2vmin, 0.95rem);
+            font-size: clamp(0.7rem, 1.6vmin, 0.9rem);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             cursor: pointer;
             border: none;
             outline: none;
-            transition: all 0.35s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
+
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .btn-action::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+            transform: skewX(-25deg);
+            transition: left 0.6s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .btn-action:hover::before,
+        .btn-action:active::before {
+            left: 150%;
+        }
+
+        .btn-action>* {
+            position: relative;
+            z-index: 2;
         }
 
         .btn-burgundy-gold {
-            background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-dark) 50%, var(--gold) 100%);
+            background: linear-gradient(135deg, #4A121F 0%, #6B1E2F 30%, #9C5B6A 65%, #D4AF37 100%);
             background-size: 200% auto;
             color: #FFFFFF;
             box-shadow: 0 8px 15px rgba(107, 30, 47, 0.3);
-            animation: shine 4s infinite linear;
+            animation: shine 4s infinite alternate ease-in-out;
         }
 
         @keyframes shine {
@@ -500,14 +685,34 @@
             }
 
             100% {
-                background-position: 200% center;
+                background-position: 100% center;
             }
         }
 
+        .btn-burgundy-gold:hover,
+        .btn-burgundy-gold:active {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.6), 0 12px 20px rgba(107, 30, 47, 0.4);
+        }
+
         .btn-outline {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(4px);
             color: var(--text-main);
             border: 1.5px solid var(--gold);
+        }
+
+        .btn-outline:hover,
+        .btn-outline:active {
+            transform: translateY(-2px);
+            background-color: rgba(255, 255, 255, 0.7);
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5), inset 0 0 10px rgba(212, 175, 55, 0.1);
+        }
+
+        .map-btn {
+            overflow: hidden;
+            position: relative;
         }
 
         /* Slide Navigation */
@@ -516,36 +721,130 @@
             display: flex;
             gap: 2vw;
             width: 100%;
-            padding-top: 1.5vh;
+            padding-top: 1vh;
+            justify-content: center;
         }
 
         .slide-nav .btn-action {
             flex: 1;
+            max-width: 260px;
         }
 
-        /* Floating Audio Toggle */
-        .audio-toggle {
+        /* ----------------------------------------------------
+           4. AUDIO CONTROLS
+        ---------------------------------------------------- */
+        .audio-container {
             position: fixed;
-            bottom: 2vh;
-            right: 2vw;
+            bottom: 4vh;
+            right: 4vw;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10000;
+            padding: 10px;
+        }
+
+        .audio-toggle {
+            position: relative;
             width: clamp(40px, 6vmin, 52px);
             height: clamp(40px, 6vmin, 52px);
             border-radius: 50%;
             background: #FFFFFF;
             border: 1.5px solid var(--gold);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-            z-index: 10000;
-            /* Ensures it sits on top of the cover screen */
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             color: var(--burgundy);
+            transition: transform 0.25s ease, background 0.25s ease;
+            flex-shrink: 0;
+        }
+
+        .audio-toggle:hover {
+            transform: scale(1.05);
+            background: var(--rose-soft);
         }
 
         .audio-toggle svg {
             width: clamp(16px, 2.5vmin, 22px);
             height: clamp(16px, 2.5vmin, 22px);
+        }
+
+        /* The Volume Slider */
+        .volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 0;
+            height: 6px;
+            background: transparent;
+            border-radius: 3px;
+            outline: none;
+            opacity: 0;
+            pointer-events: none;
+            transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+        }
+
+        .audio-container:hover .volume-slider {
+            width: 80px;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .volume-slider::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            background: #CBBBA0;
+            border-radius: 3px;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--burgundy);
+            border: 1px solid var(--gold);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-top: -4px;
+            transition: transform 0.1s ease;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .volume-slider::-moz-range-track {
+            width: 100%;
+            height: 6px;
+            background: #CBBBA0;
+            border-radius: 3px;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--burgundy);
+            border: 1px solid var(--gold);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.1s ease;
+        }
+
+        .volume-slider::-moz-range-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .audio-container:hover .volume-slider {
+                width: 60px;
+            }
         }
 
         /* Thank You Modal */
@@ -596,6 +895,10 @@
 
 <body>
 
+    <!-- 0. FIXED FLORAL BACKGROUND & FRAME -->
+    <div class="bg-frame"></div>
+    <div class="gold-frame-border"></div>
+
     <!-- 1. STATIC COVER SCREEN -->
     <div id="coverScreen">
         <div class="cover-content">
@@ -613,25 +916,29 @@
 
     <!-- 3. MODERN ROYALTY-FREE MUSIC -->
     <audio id="bgMusic" loop preload="auto">
-        <!-- Primary: Reliable Pixabay track (Modern Wedding) -->
         <source
             src="wedding1.mp3"
             type="audio/mpeg">
-        <!-- Fallback: Reliable Pixabay track (Wedding Piano) -->
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
     </audio>
 
-    <button class="audio-toggle" id="audioBtn" title="Toggle Background Music">
-        <svg id="musicIconPlay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            style="display:none;">
-            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-        </svg>
-        <svg id="musicIconPause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 18V5l12-2v13" />
-            <circle cx="6" cy="18" r="3" />
-            <circle cx="18" cy="16" r="3" />
-        </svg>
-    </button>
+    <!-- AUDIO CONTROLS -->
+    <div class="audio-container" id="audioContainer">
+        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="100"
+            aria-label="Volume Slider">
+
+        <button class="audio-toggle" id="audioBtn" title="Toggle Background Music">
+            <svg id="musicIconPlay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                style="display:none;">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <svg id="musicIconPause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18V5l12-2v13" />
+                <circle cx="6" cy="18" r="3" />
+                <circle cx="18" cy="16" r="3" />
+            </svg>
+        </button>
+    </div>
 
     <!-- 4. MAIN INVITATION CONTENT (CAROUSEL) -->
     <div class="app-wrapper" id="appWrapper">
@@ -653,14 +960,9 @@
                         Salina Amatya
                     </h1>
                     <p
-                        style="font-family: var(--font-serif); font-style: italic; color: var(--text-muted); font-size: clamp(0.8rem, 2.2vmin, 1.1rem); margin-top: 1vh;">
+                        style="font-family: var(--font-serif); font-style: italic; color: var(--text-main); font-size: clamp(0.8rem, 2.2vmin, 1.1rem); margin-top: 1vh; text-shadow: 1px 1px 3px rgba(255,255,255,0.9);">
                         "Two Hearts. One Lifetime Celebration."
                     </p>
-
-                    <div class="story-img-frame">
-                        <img src="couple-photo.jpg" alt="Salina and Sudan"
-                            onerror="this.src='https://placehold.co/800x400/F9ECEE/6B1E2F?text=Sudan+%26+Salina'">
-                    </div>
 
                     <div class="gold-divider">
                         <div class="gold-line"></div>
@@ -692,7 +994,7 @@
                 </div>
 
                 <div class="slide-nav">
-                    <button class="btn-action btn-burgundy-gold" onclick="moveSlide(1)">Continue ➔</button>
+                    <button class="btn-action btn-burgundy-gold" onclick="moveSlide(1)"><span>Continue ➔</span></button>
                 </div>
             </section>
 
@@ -703,7 +1005,7 @@
                 <div class="card-body">
                     <span class="sub-tag">A Joyful Journey</span>
                     <h2
-                        style="font-family: var(--font-cursive); font-size: clamp(2rem, 5vmin, 2.8rem); font-weight: 700; color: var(--text-main); margin-bottom: 1vh;">
+                        style="font-family: var(--font-cursive); font-size: clamp(2rem, 5vmin, 2.8rem); font-weight: 700; color: var(--text-main); margin-bottom: 1vh; text-shadow: 1px 1px 3px rgba(255,255,255,0.9);">
                         Our Story</h2>
 
                     <div class="story-img-frame">
@@ -712,7 +1014,8 @@
                             onerror="this.src='https://placehold.co/800x400/FAF8F5/6B1E2F?text=Our+Story'">
                     </div>
 
-                    <p style="color: var(--text-muted); font-size: clamp(0.75rem, 2vmin, 1rem); line-height: 1.6;">
+                    <p
+                        style="color: var(--text-main); font-size: clamp(0.75rem, 2vmin, 1rem); line-height: 1.6; text-shadow: 1px 1px 3px rgba(255,255,255,0.9);">
                         From our very first meeting to years of shared laughter, growth, and endless conversations—our
                         journey together has brought us to this wondrous moment. We are overjoyed to step into this new
                         chapter of love surrounded by our families and dearest friends.
@@ -720,8 +1023,8 @@
                 </div>
 
                 <div class="slide-nav">
-                    <button class="btn-action btn-outline" onclick="moveSlide(-1)">⬅ Back</button>
-                    <button class="btn-action btn-burgundy-gold" onclick="moveSlide(1)">Next ➔</button>
+                    <button class="btn-action btn-outline" onclick="moveSlide(-1)"><span>⬅ Back</span></button>
+                    <button class="btn-action btn-burgundy-gold" onclick="moveSlide(1)"><span>Next ➔</span></button>
                 </div>
             </section>
 
@@ -732,7 +1035,7 @@
                 <div class="card-body">
                     <span class="sub-tag">With Blessings &amp; Honor</span>
                     <h2
-                        style="font-family: var(--font-cursive); font-size: clamp(2rem, 5vmin, 2.8rem); font-weight: 700; color: var(--text-main); margin-bottom: 1vh;">
+                        style="font-family: var(--font-cursive); font-size: clamp(2rem, 5vmin, 2.8rem); font-weight: 700; color: var(--text-main); margin-bottom: 1vh; text-shadow: 1px 1px 3px rgba(255,255,255,0.9);">
                         Family Honors</h2>
 
                     <div class="family-grid">
@@ -752,72 +1055,69 @@
                 </div>
 
                 <div class="slide-nav">
-                    <button class="btn-action btn-outline" onclick="moveSlide(-1)">⬅ Back</button>
-                    <button class="btn-action btn-burgundy-gold" onclick="moveSlide(1)">Next ➔</button>
+                    <button class="btn-action btn-outline" onclick="moveSlide(-1)"><span>⬅ Back</span></button>
+                    <button class="btn-action btn-burgundy-gold" onclick="moveSlide(1)"><span>Next ➔</span></button>
                 </div>
             </section>
 
-            <!-- SLIDE 4: SCHEDULE & VENUE -->
+            <!-- SLIDE 4: SCHEDULE & VENUE (UPDATED) -->
             <section class="card" id="slide-3">
                 <div class="card-inner-frame"></div>
 
                 <div class="card-body">
-                    <span class="sub-tag">Program Details</span>
+                    <span class="sub-tag" style="margin-bottom: 0.5vh;">Program Details</span>
                     <h2
-                        style="font-family: var(--font-cursive); font-size: clamp(2rem, 5vmin, 2.8rem); font-weight: 700; color: var(--text-main); margin-bottom: 1vh;">
+                        style="font-family: var(--font-cursive); font-weight: 700; color: var(--text-main); margin-bottom: 0; text-shadow: 1px 1px 3px rgba(255,255,255,0.9);">
                         When &amp; Where</h2>
 
                     <div class="timeline">
+
                         <div class="event-card">
-                            <div class="event-time-badge">11:00 AM</div>
+                            <div class="event-time-badge">14 MANGSIR</div>
                             <div class="event-details">
-                                <h3>Auspicious Wedding Ceremony</h3>
-                                <p>Traditional ritual blessings &amp; exchange of vows</p>
+                                <h3>Reception Feast</h3>
+                                <p>Celebratory gathering organized to share happiness</p>
                             </div>
                         </div>
 
                         <div class="event-card">
-                            <div class="event-time-badge">01:30 PM</div>
+                            <div class="event-time-badge">5:00 PM</div>
                             <div class="event-details">
-                                <h3>Grand Festive Banquet</h3>
-                                <p>Delectable dinner, live music &amp; joyful toasts</p>
+                                <h3>Time</h3>
+                                <p>Join us as we begin the celebration</p>
                             </div>
                         </div>
 
-                        <div class="event-card">
-                            <div class="event-time-badge">03:30 PM</div>
-                            <div class="event-details">
-                                <h3>Reception &amp; Dancing</h3>
-                                <p>High-energy celebration &amp; photo moments</p>
-                            </div>
-                        </div>
                     </div>
 
-                    <div style="margin-top: 2vh; text-align: center;">
-                        <p
-                            style="font-family: var(--font-serif); font-weight: 700; color: var(--text-main); font-size: clamp(1rem, 2.5vmin, 1.25rem);">
-                            The Royal Palace Ballroom</p>
-                        <p
-                            style="color: var(--text-muted); font-size: clamp(0.7rem, 1.8vmin, 0.9rem); margin-bottom: 1.5vh;">
-                            Durbar Marg, Kathmandu, Nepal</p>
-
-                        <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer"
-                            class="btn-action btn-outline"
-                            style="width: auto; padding-left: 20px; padding-right: 20px;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    <div class="location-block">
+                        <p class="location-title">Paradise Banquet</p>
+                        <p class="location-address">Swayambhu Marg, Kathmandu</p>
+                        <a href="https://maps.app.goo.gl/rVQvpEg7h8XGcjMQ6" target="_blank" rel="noopener noreferrer"
+                            class="btn-action btn-outline map-btn">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
                                 <polygon points="1 6 1 22 8 18 15 22 22 18 22 2 15 6 8 2 1 6" />
                                 <line x1="8" y1="2" x2="8" y2="18" />
                                 <line x1="15" y1="6" x2="15" y2="22" />
                             </svg>
-                            Open Google Maps
+                            <span>Map</span>
                         </a>
                     </div>
+
+                    <!-- NEW REAL MAP CUTOUT -->
+                    <div class="map-container">
+                        <iframe class="map-iframe"
+                            src="https://maps.google.com/maps?q=Paradise%20Banquet,%20Swayambhu%20Marg,%20Kathmandu&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                            frameborder="0" scrolling="no" marginheight="0" marginwidth="0" loading="lazy">
+                        </iframe>
+                    </div>
+
                 </div>
 
                 <div class="slide-nav">
-                    <button class="btn-action btn-outline" onclick="moveSlide(-1)">⬅ Back</button>
-                    <button class="btn-action btn-burgundy-gold" onclick="moveSlide(1)">Next ➔</button>
+                    <button class="btn-action btn-outline" onclick="moveSlide(-1)"><span>⬅ Back</span></button>
+                    <button class="btn-action btn-burgundy-gold" onclick="moveSlide(1)"><span>Next ➔</span></button>
                 </div>
             </section>
 
@@ -828,20 +1128,21 @@
                 <div class="card-body">
                     <span class="sub-tag">Kindly Respond</span>
                     <h2
-                        style="font-family: var(--font-cursive); font-size: clamp(2rem, 5vmin, 2.8rem); font-weight: 700; color: var(--text-main); margin-bottom: 1vh;">
+                        style="font-family: var(--font-cursive); font-size: clamp(2rem, 5vmin, 2.8rem); font-weight: 700; color: var(--text-main); margin-bottom: 1vh; text-shadow: 1px 1px 3px rgba(255,255,255,0.9);">
                         Join Our Day</h2>
-                    <p style="color: var(--text-muted); font-size: clamp(0.8rem, 2.2vmin, 1rem); margin-bottom: 3vh;">
+                    <p
+                        style="color: var(--text-main); font-size: clamp(0.8rem, 2.2vmin, 1rem); margin-bottom: 3vh; text-shadow: 1px 1px 3px rgba(255,255,255,0.9);">
                         Your presence and love will complete our grand celebration!
                     </p>
 
                     <button class="btn-action btn-burgundy-gold" onclick="triggerAttendance()"
                         style="max-width: 300px;">
-                        ✨ Will Attend ✨
+                        <span>✨ Will Attend ✨</span>
                     </button>
                 </div>
 
                 <div class="slide-nav">
-                    <button class="btn-action btn-outline" onclick="moveSlide(-1)">⬅ Back</button>
+                    <button class="btn-action btn-outline" onclick="moveSlide(-1)"><span>⬅ Back</span></button>
                 </div>
             </section>
 
@@ -858,24 +1159,24 @@
                 style="font-family: var(--font-cursive); font-size: clamp(2rem, 6vmin, 3rem); font-weight: 700; color: var(--text-main); margin: 1vh 0;">
                 Thank You!</h2>
             <p
-                style="font-family: var(--font-serif); font-size: clamp(1rem, 2.5vmin, 1.25rem); color: var(--text-muted); line-height: 1.5; margin-bottom: 3vh;">
+                style="font-family: var(--font-serif); font-size: clamp(1rem, 2.5vmin, 1.25rem); color: var(--text-muted); line-height: 1.5; margin-bottom: 1vh;">
                 Thank you for confirming! We can't wait to see you at the wedding! 🎉
             </p>
-
-            <button class="btn-action btn-outline" onclick="closeModal()">
-                Back To Invitation
-            </button>
         </div>
     </div>
 
     <script>
-        // --- 1. Robust Audio Handling ---
+        // --- 1. Robust Audio Handling & Volume Slider ---
         const bgMusic = document.getElementById('bgMusic');
         const audioBtn = document.getElementById('audioBtn');
         const musicIconPlay = document.getElementById('musicIconPlay');
         const musicIconPause = document.getElementById('musicIconPause');
+        const volumeSlider = document.getElementById('volumeSlider');
 
-        // Sync the UI icon with the actual state of the audio element
+        // Set initial volume
+        bgMusic.volume = volumeSlider.value / 100;
+
+        // Sync UI with audio state
         bgMusic.addEventListener('play', () => {
             musicIconPlay.style.display = 'none';
             musicIconPause.style.display = 'block';
@@ -886,14 +1187,13 @@
             musicIconPause.style.display = 'none';
         });
 
-        // Handle loading errors gracefully (e.g., if the network blocks the file)
         bgMusic.addEventListener('error', (e) => {
             console.warn("Audio failed to load. Please check the source URL.", bgMusic.error);
             musicIconPlay.style.display = 'block';
             musicIconPause.style.display = 'none';
         });
 
-        // Toggle Play/Pause on button click
+        // Toggle Play/Pause
         audioBtn.addEventListener('click', () => {
             if (bgMusic.paused) {
                 const playPromise = bgMusic.play();
@@ -905,6 +1205,16 @@
             } else {
                 bgMusic.pause();
             }
+        });
+
+        // Update volume when slider is dragged
+        volumeSlider.addEventListener('input', (e) => {
+            bgMusic.volume = e.target.value / 100;
+        });
+
+        // Prevent slider interaction from triggering the carousel or other click events
+        volumeSlider.addEventListener('click', (e) => {
+            e.stopPropagation();
         });
 
         // --- 2. Intro Slide & Audio Sequence ---
@@ -936,8 +1246,9 @@
             }, 1200);
         }
 
-        // --- 3. Live Working Countdown Timer ---
-        const targetDate = new Date('November 28, 2026 11:00:00').getTime();
+        // --- 3. Live Working Countdown Timer with Tick Animation ---
+        const targetDate = new Date('November 30, 2026 17:00:00').getTime();
+        let lastSecond = -1;
 
         function updateCountdown() {
             const now = new Date().getTime();
@@ -956,7 +1267,17 @@
             document.getElementById('days').innerText = String(days).padStart(2, '0');
             document.getElementById('hours').innerText = String(hours).padStart(2, '0');
             document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+
+            const secondsEl = document.getElementById('seconds');
+            if (seconds !== lastSecond) {
+                secondsEl.innerText = String(seconds).padStart(2, '0');
+
+                secondsEl.classList.remove('tick');
+                void secondsEl.offsetWidth; // Force reflow
+                secondsEl.classList.add('tick');
+
+                lastSecond = seconds;
+            }
         }
 
         updateCountdown();
@@ -984,10 +1305,12 @@
             slides[currentSlide].classList.add('active');
         }
 
-        // --- 5. Falling Rose Petals Canvas (Medium Speed & Balanced Density) ---
+        // --- 5. Interactive Falling Rose Petals Canvas ---
         const canvas = document.getElementById('petalCanvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
+
+        const mouse = { x: -1000, y: -1000 };
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -995,6 +1318,28 @@
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        window.addEventListener('mouseout', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        });
+
+        window.addEventListener('touchend', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        });
 
         class Petal {
             constructor() {
@@ -1011,6 +1356,8 @@
                 this.rotationSpeed = Math.random() * 1.6 - 0.8;
                 this.color = ['#6B1E2F', '#832C37', '#E8C5C8', '#D4AF37'][Math.floor(Math.random() * 4)];
                 this.opacity = Math.random() * 0.5 + 0.4;
+                this.vx = 0;
+                this.vy = 0;
             }
 
             update() {
@@ -1018,7 +1365,24 @@
                 this.x += this.speedX + Math.sin(this.y * 0.015) * 0.5;
                 this.rotation += this.rotationSpeed;
 
-                if (this.y > canvas.height + 25) {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                this.vx *= 0.92;
+                this.vy *= 0.92;
+
+                const dx = this.x - mouse.x;
+                const dy = this.y - mouse.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const interactionRadius = 120;
+
+                if (dist < interactionRadius && dist > 0) {
+                    const force = (interactionRadius - dist) / interactionRadius;
+                    this.vx += (dx / dist) * force * 0.8;
+                    this.vy += (dy / dist) * force * 0.8;
+                }
+
+                if (this.y > canvas.height + 25 || this.x < -50 || this.x > canvas.width + 50) {
                     this.reset();
                 }
             }
@@ -1051,17 +1415,25 @@
         animatePetals();
 
         // --- 6. RSVP Modal Controls ---
+        const thankYouModal = document.getElementById('thankYouModal');
+
         function triggerAttendance() {
-            const modal = document.getElementById('thankYouModal');
-            modal.classList.add('active');
+            thankYouModal.classList.add('active');
 
             for (let i = 0; i < 10; i++) {
                 petals.push(new Petal());
             }
         }
 
+        // Close modal when clicking anywhere on the overlay background
+        thankYouModal.addEventListener('click', function (e) {
+            if (e.target === thankYouModal) {
+                closeModal();
+            }
+        });
+
         function closeModal() {
-            document.getElementById('thankYouModal').classList.remove('active');
+            thankYouModal.classList.remove('active');
         }
     </script>
 </body>
