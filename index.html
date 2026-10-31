@@ -51,7 +51,6 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            /* Prevent scrolling entirely */
             background-color: var(--bg-cream);
             background-image: radial-gradient(circle at center, #FFFDFB 0%, #EDE6DC 100%);
             color: var(--text-main);
@@ -190,7 +189,6 @@
             align-items: center;
             justify-content: center;
             padding: 2vh 4vw;
-            /* Dynamic padding based on screen height/width */
         }
 
         .app-wrapper.visible {
@@ -204,12 +202,10 @@
             max-width: 800px;
             height: 100%;
             max-height: 90vh;
-            /* Leaves safe area on very tall screens */
         }
 
         .card {
             position: absolute;
-            /* Stacking them entirely */
             inset: 0;
             background: var(--bg-card);
             backdrop-filter: blur(14px);
@@ -221,7 +217,6 @@
             text-align: center;
             display: flex;
             flex-direction: column;
-            /* Key for pushing buttons to bottom */
 
             /* Carousel Animation States */
             opacity: 0;
@@ -259,7 +254,6 @@
             align-items: center;
             width: 100%;
             overflow: hidden;
-            /* Prevent internal scroll */
             padding-bottom: 1vh;
         }
 
@@ -267,7 +261,6 @@
         .story-img-frame {
             width: 100%;
             max-height: 35vh;
-            /* Dynamic max height */
             border-radius: clamp(10px, 2vh, 18px);
             overflow: hidden;
             margin: 2vh 0;
@@ -281,7 +274,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Fills the frame beautifully without breaking aspect ratio */
             display: block;
         }
 
@@ -518,7 +510,7 @@
             border: 1.5px solid var(--gold);
         }
 
-        /* Slide Navigation (Pinned to bottom due to flex) */
+        /* Slide Navigation */
         .slide-nav {
             margin-top: auto;
             display: flex;
@@ -542,7 +534,8 @@
             background: #FFFFFF;
             border: 1.5px solid var(--gold);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-            z-index: 999;
+            z-index: 10000;
+            /* Ensures it sits on top of the cover screen */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -618,11 +611,13 @@
     <!-- 2. FALLING PETALS CANVAS BACKGROUND -->
     <canvas id="petalCanvas"></canvas>
 
-    <!-- 3. ROYALTY-FREE MUSIC TOGGLE -->
+    <!-- 3. MODERN ROYALTY-FREE MUSIC -->
     <audio id="bgMusic" loop preload="auto">
+        <!-- Primary: Reliable Pixabay track (Modern Wedding) -->
         <source
-            src="https://upload.wikimedia.org/wikipedia/commons/2/21/Chopin_-_Nocturne_in_E_flat_major_Op._9_No._2.ogg"
-            type="audio/ogg">
+            src="andriig-wedding-wedding-music-604061.mp3"
+            type="audio/mpeg">
+        <!-- Fallback: Reliable Pixabay track (Wedding Piano) -->
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
     </audio>
 
@@ -874,9 +869,45 @@
     </div>
 
     <script>
-        // --- 1. Intro Slide & Audio Sequence ---
+        // --- 1. Robust Audio Handling ---
         const bgMusic = document.getElementById('bgMusic');
-        let isMusicPlaying = false;
+        const audioBtn = document.getElementById('audioBtn');
+        const musicIconPlay = document.getElementById('musicIconPlay');
+        const musicIconPause = document.getElementById('musicIconPause');
+
+        // Sync the UI icon with the actual state of the audio element
+        bgMusic.addEventListener('play', () => {
+            musicIconPlay.style.display = 'none';
+            musicIconPause.style.display = 'block';
+        });
+
+        bgMusic.addEventListener('pause', () => {
+            musicIconPlay.style.display = 'block';
+            musicIconPause.style.display = 'none';
+        });
+
+        // Handle loading errors gracefully (e.g., if the network blocks the file)
+        bgMusic.addEventListener('error', (e) => {
+            console.warn("Audio failed to load. Please check the source URL.", bgMusic.error);
+            musicIconPlay.style.display = 'block';
+            musicIconPause.style.display = 'none';
+        });
+
+        // Toggle Play/Pause on button click
+        audioBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                const playPromise = bgMusic.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Playback prevented by browser:", error);
+                    });
+                }
+            } else {
+                bgMusic.pause();
+            }
+        });
+
+        // --- 2. Intro Slide & Audio Sequence ---
         let isOpening = false;
 
         function openInvitation() {
@@ -887,7 +918,10 @@
             const wrapper = document.getElementById('appWrapper');
 
             // Start music immediately on user gesture
-            playAudio();
+            const playPromise = bgMusic.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => console.log("Auto-play prevented:", error));
+            }
 
             // Trigger the slide up and fade in
             cover.classList.add('opened');
@@ -899,44 +933,10 @@
             // Completely remove the cover from the DOM after it fades out to prevent any "stuck" interactions
             setTimeout(() => {
                 cover.style.display = 'none';
-            }, 1200); // Wait for the 1.2s transition
+            }, 1200);
         }
 
-        function playAudio() {
-            bgMusic.play().then(() => {
-                isMusicPlaying = true;
-                updateAudioIcon();
-            }).catch(() => {
-                isMusicPlaying = false;
-                updateAudioIcon();
-            });
-        }
-
-        function toggleAudio() {
-            if (isMusicPlaying) {
-                bgMusic.pause();
-                isMusicPlaying = false;
-            } else {
-                playAudio();
-            }
-            updateAudioIcon();
-        }
-
-        function updateAudioIcon() {
-            const playIcon = document.getElementById('musicIconPlay');
-            const pauseIcon = document.getElementById('musicIconPause');
-            if (isMusicPlaying) {
-                playIcon.style.display = 'none';
-                pauseIcon.style.display = 'block';
-            } else {
-                playIcon.style.display = 'block';
-                pauseIcon.style.display = 'none';
-            }
-        }
-
-        document.getElementById('audioBtn').addEventListener('click', toggleAudio);
-
-        // --- 2. Live Working Countdown Timer ---
+        // --- 3. Live Working Countdown Timer ---
         const targetDate = new Date('November 28, 2026 11:00:00').getTime();
 
         function updateCountdown() {
@@ -962,35 +962,29 @@
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
-        // --- 3. Carousel Navigation Logic ---
+        // --- 4. Carousel Navigation Logic ---
         let currentSlide = 0;
         const slides = document.querySelectorAll('.card');
         const totalSlides = slides.length;
 
         function moveSlide(direction) {
-            // Remove active and prev classes from current slide
             slides[currentSlide].classList.remove('active');
 
-            // If moving forward, mark current as prev so it slides left
             if (direction > 0) {
                 slides[currentSlide].classList.add('prev');
             } else {
-                // If moving backward, remove prev from all to reset animation
                 slides.forEach(slide => slide.classList.remove('prev'));
             }
 
-            // Calculate new slide index
             currentSlide += direction;
 
-            // Bound the index
             if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
             if (currentSlide < 0) currentSlide = 0;
 
-            // Add active class to new slide
             slides[currentSlide].classList.add('active');
         }
 
-        // --- 4. Falling Rose Petals Canvas (Medium Speed & Balanced Density) ---
+        // --- 5. Falling Rose Petals Canvas (Medium Speed & Balanced Density) ---
         const canvas = document.getElementById('petalCanvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
@@ -1042,7 +1036,6 @@
             }
         }
 
-        // Initialize 22 petals for medium density
         for (let i = 0; i < 22; i++) {
             petals.push(new Petal());
         }
@@ -1057,12 +1050,11 @@
         }
         animatePetals();
 
-        // --- 5. RSVP Modal Controls ---
+        // --- 6. RSVP Modal Controls ---
         function triggerAttendance() {
             const modal = document.getElementById('thankYouModal');
             modal.classList.add('active');
 
-            // Add celebratory petal burst
             for (let i = 0; i < 10; i++) {
                 petals.push(new Petal());
             }
