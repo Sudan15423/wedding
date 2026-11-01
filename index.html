@@ -283,6 +283,8 @@
             border: 1px solid rgba(212, 175, 55, 0.5);
             border-radius: clamp(10px, 2vh, 20px);
             pointer-events: none;
+            z-index: 2;
+            /* Keep above floating wishes */
         }
 
         /* Content Wrapper to handle dynamic fitting */
@@ -295,6 +297,9 @@
             width: 100%;
             overflow: hidden;
             padding-bottom: 0;
+            position: relative;
+            z-index: 10;
+            /* Ensure UI is above wishes */
         }
 
         /* ----------------------------------------------------
@@ -379,6 +384,114 @@
             margin-bottom: 1.5vh;
         }
 
+        /* ----------------------------------------------------
+           NEW "OUR STORY" TIMELINE LAYOUT
+        ---------------------------------------------------- */
+        .story-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5vh;
+            width: 100%;
+            margin-top: 1.5vh;
+            padding: 0 1vw;
+        }
+
+        .story-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(10px, 3vw, 20px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            padding: 1.5vh 2vw;
+            border-radius: clamp(10px, 2vh, 18px);
+            border: 1px solid var(--gold-border);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            text-align: left;
+        }
+
+        .story-thumb {
+            width: clamp(60px, 12vmin, 85px);
+            height: clamp(60px, 12vmin, 85px);
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gold);
+            box-shadow: 0 2px 8px rgba(107, 30, 47, 0.15);
+            flex-shrink: 0;
+        }
+
+        .story-text {
+            flex: 1;
+            font-size: clamp(0.65rem, 1.6vmin, 0.85rem);
+            color: var(--text-main);
+            line-height: 1.4;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .story-text strong {
+            display: block;
+            font-family: var(--font-cursive);
+            font-size: clamp(1.1rem, 2.8vmin, 1.5rem);
+            color: var(--burgundy);
+            margin-bottom: 0.2vh;
+            font-weight: 700;
+        }
+
+        /* ----------------------------------------------------
+           NEW FLOATING WELL WISHES LAYOUT
+        ---------------------------------------------------- */
+        .wishes-area {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+            /* Behind card body */
+        }
+
+        .floating-wish {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--gold-border);
+            font-family: var(--font-serif);
+            font-size: clamp(0.65rem, 1.6vmin, 0.85rem);
+            color: var(--burgundy-dark);
+            font-style: italic;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-align: center;
+
+            /* Allows text to wrap within the pill shape */
+            width: max-content;
+            max-width: 85%;
+            white-space: normal;
+
+            animation: floatWish 4.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes floatWish {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -40%) scale(0.9);
+            }
+
+            15% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            80% {
+                opacity: 1;
+                transform: translate(-50%, -60%) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -70%) scale(1);
+            }
+        }
+
         /* STATIC MAP EMBED STYLES */
         .map-container {
             display: block;
@@ -401,33 +514,17 @@
             filter: sepia(0) contrast(1) brightness(1);
         }
 
+        /* ENLARGED IFRAME TO CROP OUT UI CONTROLS */
         .map-iframe {
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
             border: none;
             display: block;
             pointer-events: none;
             /* FREEZES THE MAP */
-        }
-
-        /* Responsive Media Frames */
-        .story-img-frame {
-            width: 100%;
-            max-height: 32vh;
-            border-radius: clamp(10px, 2vh, 18px);
-            overflow: hidden;
-            margin: 2vh 0;
-            border: 1px solid var(--gold-border);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-            display: flex;
-            justify-content: center;
-        }
-
-        .story-img-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
         }
 
         /* Monogram Logo */
@@ -745,6 +842,8 @@
             width: 100%;
             padding-top: 1vh;
             justify-content: center;
+            position: relative;
+            z-index: 10;
         }
 
         .slide-nav .btn-action {
@@ -1028,18 +1127,32 @@
                         style="font-family: var(--font-cursive); font-size: clamp(2rem, 5vmin, 2.8rem); font-weight: 700; color: var(--text-main); margin-bottom: 1vh; text-shadow: 1px 1px 3px rgba(255,255,255,0.9);">
                         Our Story</h2>
 
-                    <div class="story-img-frame">
-                        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80"
-                            alt="Romantic Celebration"
-                            onerror="this.src='https://placehold.co/800x400/FAF8F5/6B1E2F?text=Our+Story'">
+                    <div class="story-list">
+                        <div class="story-item">
+                            <img src="https://images.unsplash.com/photo-1522849696084-818b29dfe210?q=80&w=200&auto=format&fit=crop"
+                                alt="First Meeting" class="story-thumb">
+                            <div class="story-text">
+                                <strong>The First Spark</strong>
+                                Where it all began. One simple conversation that changed everything.
+                            </div>
+                        </div>
+                        <div class="story-item">
+                            <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=200&auto=format&fit=crop"
+                                alt="The Proposal" class="story-thumb">
+                            <div class="story-text">
+                                <strong>The Proposal</strong>
+                                A promise of forever, surrounded by the beauty of nature.
+                            </div>
+                        </div>
+                        <div class="story-item">
+                            <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=200&auto=format&fit=crop"
+                                alt="The Journey" class="story-thumb">
+                            <div class="story-text">
+                                <strong>The Journey</strong>
+                                Through every high and low, we found our home in each other.
+                            </div>
+                        </div>
                     </div>
-
-                    <p
-                        style="color: var(--text-main); font-size: clamp(0.75rem, 2vmin, 1rem); line-height: 1.6; text-shadow: 1px 1px 3px rgba(255,255,255,0.9);">
-                        From our very first meeting to years of shared laughter, growth, and endless conversations—our
-                        journey together has brought us to this wondrous moment. We are overjoyed to step into this new
-                        chapter of love surrounded by our families and dearest friends.
-                    </p>
                 </div>
 
                 <div class="slide-nav">
@@ -1080,7 +1193,7 @@
                 </div>
             </section>
 
-            <!-- SLIDE 4: SCHEDULE & VENUE -->
+            <!-- SLIDE 4: SCHEDULE & VENUE (UPDATED WITH EXACT COORDINATES) -->
             <section class="card" id="slide-3">
                 <div class="card-inner-frame"></div>
 
@@ -1125,11 +1238,11 @@
                         </a>
                     </div>
 
-                    <!-- STATIC REAL MAP CUTOUT -->
+                    <!-- PLAIN STATIC MAP (ZOOMED IN & CROPPED) WITH EXACT COORDINATES -->
                     <a href="https://maps.app.goo.gl/rVQvpEg7h8XGcjMQ6" target="_blank" rel="noopener noreferrer"
                         class="map-container">
                         <iframe class="map-iframe"
-                            src="https://maps.google.com/maps?q=Paradise%20Banquet,%20Swayambhu%20Marg,%20Kathmandu&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                            src="https://maps.google.com/maps?q=27.71456580839725,85.30328551465412&t=m&z=17&ie=UTF8&iwloc=near&output=embed"
                             frameborder="0" scrolling="no" marginheight="0" marginwidth="0" loading="lazy">
                         </iframe>
                     </a>
@@ -1142,9 +1255,12 @@
                 </div>
             </section>
 
-            <!-- SLIDE 5: RSVP -->
+            <!-- SLIDE 5: RSVP (WITH FLOATING WISHES) -->
             <section class="card" id="slide-4">
                 <div class="card-inner-frame"></div>
+
+                <!-- WISHES AREA (Behind the content) -->
+                <div class="wishes-area" id="wishesArea"></div>
 
                 <div class="card-body">
                     <span class="sub-tag">Kindly Respond</span>
@@ -1326,7 +1442,112 @@
             slides[currentSlide].classList.add('active');
         }
 
-        // --- 5. Interactive Falling Rose Petals Canvas ---
+        // --- 5. FLOATING WELL WISHES LOGIC ---
+        const wishes = [
+            "Wishing you a lifetime of happiness!",
+            "So thrilled to celebrate with you.",
+            "A perfect match made in heaven.",
+            "Here's to love, laughter, and forever.",
+            "Can't wait for the big day!",
+            "Best wishes on this wonderful journey.",
+            "May your love story be endless.",
+            "Cheers to the beautiful couple!",
+            "Wishing you all the joy in the world.",
+            "So happy for you both!",
+            "A lifetime of blessings to you.",
+            "Love is in the air!",
+            "To a beautiful future together.",
+            "Sending you all my love today.",
+            "You two are perfect for each other.",
+            "Wishing you a marriage as strong as your love.",
+            "May every day be a honeymoon.",
+            "Here's to a lifetime of adventures.",
+            "Wishing you a happily ever after.",
+            "May your love grow stronger each day.",
+            "Celebrating your beautiful union!",
+            "Sending warm wishes for your new life.",
+            "May your home be filled with love.",
+            "To the sweetest couple I know!",
+            "Wishing you a beautiful wedding day."
+        ];
+
+        const wishesArea = document.getElementById('wishesArea');
+        const maxVisibleWishes = 5;
+        let activeWishes = 0;
+        let activePositions = []; // Store positions of active messages to prevent overlap
+
+        function spawnWish() {
+            // Only spawn if slide 4 is active and we haven't reached the max
+            if (currentSlide !== 4 || activeWishes >= maxVisibleWishes) return;
+
+            // Pick random message
+            const text = wishes[Math.floor(Math.random() * wishes.length)];
+
+            // Try to find a non-overlapping position
+            let topPos, leftPos;
+            let validPosition = false;
+            let attempts = 0;
+
+            while (!validPosition && attempts < 20) {
+                // Restrict to specific safe zones to avoid the text/buttons
+                // Zone 1 (Top): 12% to 25%
+                // Zone 2 (Middle-Bottom): 68% to 78% (Above Back button)
+                const isTop = Math.random() > 0.5;
+                if (isTop) {
+                    topPos = 12 + Math.random() * 13;
+                } else {
+                    topPos = 68 + Math.random() * 10;
+                }
+
+                // Keep horizontal position strictly within the card borders
+                // Left: 20% to 80%
+                leftPos = 20 + Math.random() * 60;
+
+                // Check against active positions
+                validPosition = true;
+                for (let pos of activePositions) {
+                    // Calculate distance (in percentage points)
+                    const distance = Math.sqrt(Math.pow(leftPos - pos.left, 2) + Math.pow(topPos - pos.top, 2));
+                    // Minimum distance of 20% to prevent overlapping
+                    if (distance < 20) {
+                        validPosition = false;
+                        break;
+                    }
+                }
+                attempts++;
+            }
+
+            // If we couldn't find a spot after 20 tries, just skip this spawn
+            if (!validPosition) return;
+
+            // Create element
+            const wishEl = document.createElement('div');
+            wishEl.className = 'floating-wish';
+            wishEl.innerText = text;
+
+            wishEl.style.top = `${topPos}%`;
+            wishEl.style.left = `${leftPos}%`;
+
+            // Add to DOM
+            wishesArea.appendChild(wishEl);
+            activeWishes++;
+            activePositions.push({ top: topPos, left: leftPos });
+
+            // Remove after animation finishes (4.5s matches CSS)
+            setTimeout(() => {
+                if (wishEl.parentNode) {
+                    wishEl.parentNode.removeChild(wishEl);
+                }
+                activeWishes--;
+                // Remove from active positions array
+                activePositions = activePositions.filter(p => p.top !== topPos || p.left !== leftPos);
+            }, 4500);
+        }
+
+        // Spawn a wish every 1.5 seconds
+        setInterval(spawnWish, 1500);
+
+        // --- 6. Interactive Falling Rose Petals Canvas ---
         const canvas = document.getElementById('petalCanvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
@@ -1435,7 +1656,7 @@
         }
         animatePetals();
 
-        // --- 6. RSVP Modal Controls ---
+        // --- 7. RSVP Modal Controls ---
         const thankYouModal = document.getElementById('thankYouModal');
 
         function triggerAttendance() {
