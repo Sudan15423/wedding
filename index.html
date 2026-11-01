@@ -65,17 +65,30 @@
         }
 
         /* ----------------------------------------------------
-           0. FIXED FLORAL BORDER BACKGROUND
+           0. RESPONSIVE FIXED FLORAL BORDER BACKGROUND
         ---------------------------------------------------- */
         .bg-frame {
             position: fixed;
             inset: 0;
             z-index: 0;
-            background-image: url('border.jpg');
-            background-size: cover;
-            background-position: center;
+            background-image: url('border-mobile.jpg');
+            /* Fits the full width without zooming, aligns to top */
+            background-size: 100% auto;
+            background-position: center top;
             background-repeat: no-repeat;
-            opacity: 0.95;
+            /* Blends perfectly if the screen is taller than the image */
+            background-color: #F4E8D9;
+            opacity: 1;
+        }
+
+        /* Use the wide image for tablets and desktops */
+        @media (min-width: 768px) {
+            .bg-frame {
+                background-image: url('border-desktop.jpg');
+                background-size: cover;
+                background-position: center center;
+                background-color: transparent;
+            }
         }
 
         /* The Gold Inner Frame */
@@ -366,8 +379,9 @@
             margin-bottom: 1.5vh;
         }
 
-        /* NEW MAP EMBED STYLES */
+        /* STATIC MAP EMBED STYLES */
         .map-container {
+            display: block;
             width: 100%;
             flex: 1;
             /* Fills remaining space */
@@ -379,6 +393,12 @@
             position: relative;
             /* Warm filter to match the theme */
             filter: sepia(0.3) contrast(0.9) brightness(1.05);
+            cursor: pointer;
+            transition: filter 0.3s ease;
+        }
+
+        .map-container:hover {
+            filter: sepia(0) contrast(1) brightness(1);
         }
 
         .map-iframe {
@@ -386,6 +406,8 @@
             height: 100%;
             border: none;
             display: block;
+            pointer-events: none;
+            /* FREEZES THE MAP */
         }
 
         /* Responsive Media Frames */
@@ -914,11 +936,9 @@
     <!-- 2. FALLING PETALS CANVAS BACKGROUND -->
     <canvas id="petalCanvas"></canvas>
 
-    <!-- 3. MODERN ROYALTY-FREE MUSIC -->
+    <!-- 3. MODERN ROYALTY-FREE MUSIC (PRIMARY REPLACED WITH wedding1.mp3) -->
     <audio id="bgMusic" loop preload="auto">
-        <source
-            src="wedding1.mp3"
-            type="audio/mpeg">
+        <source src="wedding1.mp3" type="audio/mpeg">
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
     </audio>
 
@@ -1060,7 +1080,7 @@
                 </div>
             </section>
 
-            <!-- SLIDE 4: SCHEDULE & VENUE (UPDATED) -->
+            <!-- SLIDE 4: SCHEDULE & VENUE -->
             <section class="card" id="slide-3">
                 <div class="card-inner-frame"></div>
 
@@ -1105,13 +1125,14 @@
                         </a>
                     </div>
 
-                    <!-- NEW REAL MAP CUTOUT -->
-                    <div class="map-container">
+                    <!-- STATIC REAL MAP CUTOUT -->
+                    <a href="https://maps.app.goo.gl/rVQvpEg7h8XGcjMQ6" target="_blank" rel="noopener noreferrer"
+                        class="map-container">
                         <iframe class="map-iframe"
                             src="https://maps.google.com/maps?q=Paradise%20Banquet,%20Swayambhu%20Marg,%20Kathmandu&t=&z=16&ie=UTF8&iwloc=&output=embed"
                             frameborder="0" scrolling="no" marginheight="0" marginwidth="0" loading="lazy">
                         </iframe>
-                    </div>
+                    </a>
 
                 </div>
 
