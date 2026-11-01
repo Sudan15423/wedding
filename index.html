@@ -72,12 +72,10 @@
             inset: 0;
             z-index: 0;
             background-image: url('border-mobile.jpg');
-            /* Fits the full width without zooming, aligns to top */
-            background-size: 100% auto;
+            /* Changed to cover to fill the whole mobile screen smoothly */
+            background-size: cover;
             background-position: center top;
             background-repeat: no-repeat;
-            /* Blends perfectly if the screen is taller than the image */
-            background-color: #F4E8D9;
             opacity: 1;
         }
 
@@ -87,7 +85,6 @@
                 background-image: url('border-desktop.jpg');
                 background-size: cover;
                 background-position: center center;
-                background-color: transparent;
             }
         }
 
@@ -496,9 +493,10 @@
         .map-container {
             display: block;
             width: 100%;
-            flex: 1;
-            /* Fills remaining space */
+            /* Changed from flex: 1 to fixed height to shrink it on mobile */
+            height: 22vh;
             min-height: 150px;
+            max-height: 200px;
             border-radius: clamp(10px, 2vh, 18px);
             overflow: hidden;
             border: 1px solid var(--gold-border);
@@ -508,19 +506,20 @@
             filter: sepia(0.3) contrast(0.9) brightness(1.05);
             cursor: pointer;
             transition: filter 0.3s ease;
+            margin-top: 1vh;
         }
 
         .map-container:hover {
             filter: sepia(0) contrast(1) brightness(1);
         }
 
-        /* ENLARGED IFRAME TO CROP OUT UI CONTROLS */
+        /* ENLARGED IFRAME TO CROP OUT UI CONTROLS AGGRESSIVELY */
         .map-iframe {
             position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 120%;
+            top: -20%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
             border: none;
             display: block;
             pointer-events: none;
@@ -1035,7 +1034,7 @@
     <!-- 2. FALLING PETALS CANVAS BACKGROUND -->
     <canvas id="petalCanvas"></canvas>
 
-    <!-- 3. MODERN ROYALTY-FREE MUSIC (PRIMARY REPLACED WITH wedding1.mp3) -->
+    <!-- 3. MODERN ROYALTY-FREE MUSIC -->
     <audio id="bgMusic" loop preload="auto">
         <source src="wedding1.mp3" type="audio/mpeg">
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
@@ -1193,7 +1192,7 @@
                 </div>
             </section>
 
-            <!-- SLIDE 4: SCHEDULE & VENUE (UPDATED WITH EXACT COORDINATES) -->
+            <!-- SLIDE 4: SCHEDULE & VENUE (UPDATED WITH SMALLER MAP) -->
             <section class="card" id="slide-3">
                 <div class="card-inner-frame"></div>
 
@@ -1238,7 +1237,7 @@
                         </a>
                     </div>
 
-                    <!-- PLAIN STATIC MAP (ZOOMED IN & CROPPED) WITH EXACT COORDINATES -->
+                    <!-- PLAIN STATIC MAP (SMALLER HEIGHT & CROPPED) -->
                     <a href="https://maps.app.goo.gl/rVQvpEg7h8XGcjMQ6" target="_blank" rel="noopener noreferrer"
                         class="map-container">
                         <iframe class="map-iframe"
